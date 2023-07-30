@@ -12,7 +12,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   title,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center space-y-2 p-4 border-2 border-gray-600">
+    <div className="flex flex-col items-center justify-center space-y-2 p-4 border-2 border-gray-600 w-[280px]">
       <img
         alt="User profile picture"
         className="w-28 rounded-full"
