@@ -19,9 +19,9 @@ function Home() {
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <ul className="grid grid-cols-4 gap-y-8 gap-x-24 p-6">
-        {Array(15)
+    <div className="flex justify-center items-center min-h-screen py-12 px-2">
+      <ul className="h-full w-full grid grid-cols-fill place-items-center gap-y-12 gap-x-2">
+        {Array(33)
           .fill("")
           .map((d, i) => (
             <li key={i}>
