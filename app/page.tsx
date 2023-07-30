@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ProfileCard, { ProfileCardProps } from "./components/ProfileCard";
 import { User } from "./types";
 
@@ -24,9 +25,11 @@ function Home() {
         {Array(33)
           .fill("")
           .map((d, i) => (
-            <li key={i}>
-              <ProfileCard {...profileCard} />
-            </li>
+            <Link key={i} href={`/user/${user.id}`}>
+              <li>
+                <ProfileCard {...profileCard} />
+              </li>
+            </Link>
           ))}
       </ul>
     </div>
