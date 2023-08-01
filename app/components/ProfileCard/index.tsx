@@ -25,15 +25,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       </div>
 
       <div className="mb-5">
-        <div className="w-max text-lg text-gray-400 hover:underline hover:text-gray-400/60">
+        <h2 className="w-max text-lg text-gray-400 hover:underline hover:text-gray-400/60">
           {subtitle}
-        </div>
-        <div className="text-2xl text-gray-200 hover:text-white">{title}</div>
+        </h2>
+        <h1 className="text-2xl text-gray-200 hover:text-white">{title}</h1>
       </div>
 
-      <div className="text-lg text-gray-200 max-w-[360px] line-clamp-3">
+      <p className="text-lg text-gray-200 max-w-[360px] line-clamp-3">
         {description}
-      </div>
+      </p>
     </div>
   );
 };
