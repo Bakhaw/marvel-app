@@ -5,3 +5,13 @@ export interface User {
   image: string;
   username: string; // @username
 }
+
+export interface MarvelCharacter {
+  description: string;
+  id: number;
+  name: string;
+  thumbnail: {
+    extension: string;
+    path: string;
+  };
+}
