@@ -1,4 +1,4 @@
-import { MarvelCharacter, User } from "../types";
+import { MarvelCharacter, Post, User } from "../types";
 
 import { PostCardProps } from "../components/PostCard";
 import { ProfileCardProps } from "../components/ProfileCard";
@@ -12,9 +12,9 @@ export function formatProfileCard(user: User): ProfileCardProps {
   };
 }
 
-export function formatPostCard(user: User): PostCardProps {
+export function formatPostCard(user: User, post: Post): PostCardProps {
   return {
-    description: user.bio,
+    description: post.text,
     image: user.image,
     subtitle: `@${user.username}`,
     title: user.displayName,
@@ -29,4 +29,23 @@ export function formatMarvelCharacterToUser(character: MarvelCharacter): User {
     image: `${character.thumbnail.path}.${character.thumbnail.extension}`,
     username: `${character.name.toLowerCase().split(" ").join("-")}`,
   };
+}
+
+export async function chat(prompt: string) {
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt,
+      }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 }

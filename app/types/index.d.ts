@@ -15,3 +15,7 @@ export interface MarvelCharacter {
     path: string;
   };
 }
+
+export interface Post {
+  text: string;
+}

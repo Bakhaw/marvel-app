@@ -1,12 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const MarvelConfig = {
   apiKey: process.env.MARVEL_API_KEY,
   hash: process.env.MARVEL_HASH,
 };
 
-export async function GET(req: Request) {
-  const params = `?ts=1&apikey=${MarvelConfig.apiKey}&hash=${MarvelConfig.hash}&offset=600`;
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const params = `?ts=1&apikey=${MarvelConfig.apiKey}&hash=${
+    MarvelConfig.hash
+  }${body.query ? `&${body.query}` : ""}`;
+
   const url = `https://gateway.marvel.com:443/v1/public/characters${params}`;
 
   try {

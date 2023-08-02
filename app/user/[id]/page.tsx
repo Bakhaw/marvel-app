@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 import {
+  chat,
   formatMarvelCharacterToUser,
   formatPostCard,
   formatProfileCard,
 } from "@/app/lib";
-import { MarvelCharacter, User } from "@/app/types";
+import { MarvelCharacter, Post, User } from "@/app/types";
 
 import PostCard from "@/app/components/PostCard";
 import ProfileCard from "@/app/components/ProfileCard";
@@ -16,40 +17,51 @@ import ProfileCard from "@/app/components/ProfileCard";
 function Page() {
   const { id: userId } = useParams();
   const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<Post[] | null>(null);
 
-  // async function chat() {
-  //   const response = await fetch("/api/chat", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       prompt:
-  //         "Écris un tweet comme si tu étais Hulk. Un truc fun et en français stp.",
-  //     }),
-  //   });
+  async function getPosts(user: User) {
+    const prompt = `Écris trois tweets comme si tu étais ${user.displayName}. Un truc fun et en français stp.
+    Une fois que tu as les tweets, range les dans un tableau d'objets JavaScript avec comme clé d'objet "text".
+    Je vais me servir de ce tableau par la suite alors veille bien à ce qu'il soit bien formatté.
+    Réponds uniquement en m'envoyant le tableau bien formatté stp.`;
 
-  //   const data = await response.json();
+    const posts = await chat(prompt);
+    setPosts(JSON.parse(posts.data));
+  }
 
-  //   return data;
-  // }
+  async function getBio(user: User) {
+    const prompt = `Écris une bio twitter comme si tu étais ${user.displayName}. Un truc très fun, 80 caractères maximum et en français stp.`;
+    const bio = await chat(prompt);
+
+    setUser({
+      ...user,
+      bio: bio.data,
+    });
+  }
 
   async function getCharacter() {
     const response = await fetch(`/api/characters/${userId}`, {
       method: "POST",
       body: JSON.stringify({ characterId: userId }),
-    });
-    const data = await response.json();
+    }).then((res) => res.json());
 
-    const character: MarvelCharacter = data.data.data.results[0];
+    const character: MarvelCharacter = response.data.data.results[0];
+    character.description = ""; // 🥶🥶🥶
+
     const characterToUser = formatMarvelCharacterToUser(character);
-
     setUser(characterToUser);
   }
 
   useEffect(() => {
     getCharacter();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    getBio(user);
+    getPosts(user);
+  }, [user?.id]);
 
   if (!user) return null;
 
@@ -59,14 +71,16 @@ function Page() {
         <ProfileCard {...formatProfileCard(user)} />
       </div>
 
+      {!posts && (
+        <div className="text-white text-lg">Loading funny content 👾</div>
+      )}
+
       <ul className="space-y-6">
-        {Array(32)
-          .fill("")
-          .map((d, i) => (
-            <li key={i}>
-              <PostCard {...formatPostCard(user)} />
-            </li>
-          ))}
+        {posts?.map((post, i) => (
+          <li key={i}>
+            <PostCard {...formatPostCard(user, post)} />
+          </li>
+        ))}
       </ul>
     </div>
   );
