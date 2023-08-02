@@ -46,11 +46,21 @@ function Home() {
     setCharacters(newCharacters);
   }
 
+  if (formattedCharacters.length === 0)
+    return (
+      <div className="h-screen flex justify-center items-center text-white">
+        Loading...
+      </div>
+    );
+
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen p-24">
-      <form className="mb-20" onSubmit={onSubmit}>
-        <input placeholder="hulk" ref={inputRef} />
-        <button className="border text-white ml-2">search</button>
+    <div className="flex flex-col justify-center items-center min-h-screen p-6 md:p-24">
+      <form className="mb-10 md:self-start" onSubmit={onSubmit}>
+        <input
+          placeholder="Search hulk for example"
+          ref={inputRef}
+          className="py-2 px-4 rounded-full bg-purple-200"
+        />
       </form>
       <ul className="h-full w-full grid grid-cols-fill place-items-center gap-x-6 gap-y-16">
         {formattedCharacters.map((user, i) => (
