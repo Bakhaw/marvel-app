@@ -21,10 +21,12 @@ const PostCard: React.FC<PostCardProps> = ({
         />
 
         <div className="mb-5">
-          <h2 className="w-max text-sm text-gray-400 hover:underline hover:text-gray-400/60">
+          <h2 className="max-w-[280px] truncate text-sm text-gray-400 hover:underline hover:text-gray-400/60">
             {subtitle}
           </h2>
-          <h1 className="text-base text-gray-200 hover:text-white">{title}</h1>
+          <h1 className="max-w-[280px] truncate text-base text-gray-200 hover:text-white">
+            {title}
+          </h1>
         </div>
       </div>
 
