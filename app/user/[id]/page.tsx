@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
+import { useCharacter } from "@/app/hooks/useCharacter";
 import {
   chat,
   formatMarvelCharacterToUser,
@@ -39,13 +40,16 @@ function Page() {
     });
   }
 
-  async function getCharacter() {
-    const response = await fetch(`/api/characters/${userId}`, {
-      method: "POST",
-      body: JSON.stringify({ characterId: userId }),
-    }).then((res) => res.json());
+  useEffect(() => {
+    if (!user) return;
 
-    const character: MarvelCharacter = response.data.data.results[0];
+    getBio(user);
+    getPosts(user);
+  }, [user?.id]);
+
+  const character = useCharacter(userId.toString());
+
+  function initUser(character: MarvelCharacter) {
     character.description = ""; // 🥶🥶🥶
 
     const characterToUser = formatMarvelCharacterToUser(character);
@@ -53,15 +57,10 @@ function Page() {
   }
 
   useEffect(() => {
-    getCharacter();
-  }, []);
+    if (!character) return;
 
-  useEffect(() => {
-    if (!user) return;
-
-    getBio(user);
-    getPosts(user);
-  }, [user?.id]);
+    initUser(character);
+  }, [character]);
 
   if (!user) return null;
 

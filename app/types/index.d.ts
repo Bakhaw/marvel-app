@@ -19,3 +19,7 @@ export interface MarvelCharacter {
 export interface Post {
   text: string;
 }
+
+export interface QueryParams {
+  search: string;
+}
