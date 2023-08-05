@@ -1,7 +1,8 @@
 "use client";
 
-import { FormEvent, useRef } from "react";
+import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
+import { MoveLeft, MoveRight } from "lucide-react";
 
 import { useQueryParams } from "./hooks/useQueryParams";
 import { useCharacters } from "./hooks/useCharacters";
@@ -16,8 +17,17 @@ function Home() {
   const query = inputRef.current?.value
     ? `nameStartsWith=${inputRef.current.value}`
     : "";
-
   const characters = useCharacters(query);
+
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const fetchLimit = 20;
+
+  async function getNextCharacters(newPage: number) {
+    if (newPage < 1) return;
+    setPage(newPage);
+  }
+
   const formattedCharacters: User[] | undefined = characters?.map((character) =>
     formatMarvelCharacterToUser(character)
   );
@@ -49,6 +59,40 @@ function Home() {
           </Link>
         ))}
       </ul>
+
+      {total > 0 && (
+        <div className="flex gap-12 text-white mt-12 transition-all ">
+          <button
+            className="hover:scale-[1.05]"
+            onClick={() => getNextCharacters(page - 1)}
+          >
+            <MoveLeft size={24} />
+          </button>
+
+          <div className="space-x-4">
+            <button
+              className="text-gray-400 hover:text-white"
+              onClick={() => getNextCharacters(page - 1)}
+            >
+              {page - 1}
+            </button>
+            <button>{page}</button>
+            <button
+              className="text-gray-400 hover:text-white"
+              onClick={() => getNextCharacters(page + 1)}
+            >
+              {page + 1}
+            </button>
+          </div>
+
+          <button
+            className="hover:scale-[1.05]"
+            onClick={() => getNextCharacters(page + 1)}
+          >
+            <MoveRight size={24} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
