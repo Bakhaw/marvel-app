@@ -22,6 +22,7 @@ function Home() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const fetchLimit = 20;
+  const lastPage = Math.round(total / fetchLimit);
 
   async function getNextCharacters(newPage: number) {
     if (newPage < 1) return;
@@ -39,6 +40,18 @@ function Home() {
       search: inputRef.current?.value,
     });
   }
+
+  if (formattedCharacters?.length === 0)
+    return (
+      <div className="h-screen flex justify-center items-center text-white">
+        Loading...
+      </div>
+    );
+
+  // TODO refacto les if qui check les page etc.
+  // TODO encapsulate getNextCharacters in two different funcs to fetch prev or next and do the necessary checks before
+
+  // TODO 2 move code to pagination component
 
   return (
     <div className="flex flex-col  min-h-screen p-6 md:p-24">
@@ -61,33 +74,65 @@ function Home() {
       </ul>
 
       {total > 0 && (
-        <div className="flex gap-12 text-white mt-12 transition-all ">
+        <div className="w-full flex justify-center items-center gap-12 text-gray-100 mt-12 transition-all ">
           <button
-            className="hover:scale-[1.05]"
-            onClick={() => getNextCharacters(page - 1)}
+            className="hover:scale-[1.05] disabled:text-gray-600"
+            disabled={page === 1}
+            onClick={() => {
+              if (page - 1 < 1) return;
+              getNextCharacters(page - 1);
+            }}
           >
             <MoveLeft size={24} />
           </button>
 
-          <div className="space-x-4">
-            <button
-              className="text-gray-400 hover:text-white"
-              onClick={() => getNextCharacters(page - 1)}
-            >
-              {page - 1}
-            </button>
-            <button>{page}</button>
-            <button
-              className="text-gray-400 hover:text-white"
-              onClick={() => getNextCharacters(page + 1)}
-            >
-              {page + 1}
-            </button>
+          <div className="flex gap-4">
+            {page - 1 > 0 && (
+              <button
+                className="text-gray-600 hover:text-white"
+                onClick={() => {
+                  if (page - 1 < 1) return;
+                  getNextCharacters(page - 1);
+                }}
+              >
+                {page - 1}
+              </button>
+            )}
+
+            <div>{page}</div>
+
+            {page !== lastPage && (
+              <button
+                className="text-gray-600 hover:text-white"
+                onClick={() => {
+                  if (page === lastPage) return;
+                  getNextCharacters(page + 1);
+                }}
+              >
+                {page + 1}
+              </button>
+            )}
+
+            {page < lastPage - 3 && (
+              <>
+                <div>...</div>
+                <button
+                  className="text-gray-600 hover:text-white"
+                  onClick={() => getNextCharacters(lastPage)}
+                >
+                  {lastPage}
+                </button>
+              </>
+            )}
           </div>
 
           <button
-            className="hover:scale-[1.05]"
-            onClick={() => getNextCharacters(page + 1)}
+            className="hover:scale-[1.05] disabled:text-gray-600"
+            disabled={page === lastPage}
+            onClick={() => {
+              if (page === lastPage) return;
+              getNextCharacters(page + 1);
+            }}
           >
             <MoveRight size={24} />
           </button>
