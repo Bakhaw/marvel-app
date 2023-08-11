@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 
 import { MarvelApiResponse, MarvelCharacter } from "../types";
 
@@ -10,38 +10,28 @@ export type CharactersParams = {
 
 type CharactersType = MarvelApiResponse<MarvelCharacter>;
 
-const initialState: CharactersType = {
-  count: 0,
-  limit: 0,
-  offset: 0,
-  results: [],
-  total: 0,
-};
+async function fetchCharacters(query: string) {
+  const response = await fetch("/api/characters", {
+    method: "POST",
+    body: JSON.stringify({
+      query,
+    }),
+  }).then((res) => res.json());
 
+  const newCharacters = response.data.data;
+  return newCharacters;
+}
+
+// react-query
 export function useCharacters({ limit, offset, search }: CharactersParams) {
-  const [characters, setCharacters] = useState<CharactersType>(initialState);
-
-  async function getCharacters(query: string) {
-    const response = await fetch("/api/characters", {
-      method: "POST",
-      body: JSON.stringify({
-        query,
-      }),
-    }).then((res) => res.json());
-
-    const newCharacters = response.data.data;
-    setCharacters(newCharacters);
-  }
-
   const query = `limit=${limit}&${
     search ? `nameStartsWith=${search}` : ""
   }&offset=${offset}`;
 
-  useEffect(() => {
-    getCharacters(query);
-  }, [query]);
+  const { data, isLoading, isFetching } = useQuery<CharactersType>({
+    queryKey: ["characters", query],
+    queryFn: () => fetchCharacters(query),
+  });
 
-  console.log({ characters });
-
-  return characters;
+  return { data, isLoading, isFetching };
 }

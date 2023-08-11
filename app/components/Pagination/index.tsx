@@ -4,13 +4,13 @@ import { useQueryParams } from "@/app/hooks/useQueryParams";
 import { QueryParams } from "@/app/types";
 
 interface PaginationProps {
+  perPage: number;
   total: number;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ total }) => {
+const Pagination: React.FC<PaginationProps> = ({ perPage, total }) => {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
 
-  const perPage = 20;
   const currentPage = Number(queryParams.page) || 1;
 
   function onChange(page: number) {
