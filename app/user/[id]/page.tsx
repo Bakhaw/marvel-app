@@ -21,22 +21,32 @@ function Page() {
   const [posts, setPosts] = useState<Post[] | null>(null);
 
   async function getPosts(user: User) {
-    const prompt = `Écris trois tweets comme si tu étais ${user.displayName}. Un truc fun et en français stp.
-    Une fois que tu as les tweets, range les dans un tableau d'objets JavaScript avec comme clé d'objet "text".
-    Je vais me servir de ce tableau par la suite alors veille bien à ce qu'il soit bien formatté.
-    Réponds uniquement en m'envoyant le tableau bien formatté stp.`;
+    // const prompt = `Écris trois tweets comme si tu étais Vegeta (Dragon Ball).
+    // Un truc très fun et en français stp.
+    // Fais quelques références à d'autres personnages.
+    // Une fois que tu as les tweets, range les dans un tableau d'objets JavaScript avec comme clé d'objet "text".
+    // Je vais me servir de ce tableau par la suite alors veille bien à ce qu'il soit bien formatté.
+    // Réponds uniquement en m'envoyant le tableau bien formatté stp.`;
+    // const posts = await chat(prompt);
 
-    const posts = await chat(prompt);
-    setPosts(JSON.parse(posts.data));
+    const mockedBio = [
+      {
+        text: "bio",
+      },
+    ];
+    setPosts(mockedBio);
+    // setPosts(JSON.parse(posts.data));
   }
 
   async function getBio(user: User) {
-    const prompt = `Écris une bio twitter comme si tu étais ${user.displayName}. Un truc très fun, 80 caractères maximum et en français stp.`;
-    const bio = await chat(prompt);
+    // const prompt = `Écris une bio twitter comme si tu étais ${user.displayName}. Un truc très fun, 80 caractères maximum et en français stp.`;
+    // const bio = await chat(prompt);
+    const mockedBio = "bio";
 
     setUser({
       ...user,
-      bio: bio.data,
+      // bio: bio.data,
+      bio: mockedBio,
     });
   }
 

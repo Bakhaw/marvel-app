@@ -1,49 +1,47 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import Link from "next/link";
-import { MoveLeft, MoveRight } from "lucide-react";
 
 import { useQueryParams } from "./hooks/useQueryParams";
-import { useCharacters } from "./hooks/useCharacters";
+import { CharactersParams, useCharacters } from "./hooks/useCharacters";
 import { formatMarvelCharacterToUser, formatProfileCard } from "./lib";
 import { QueryParams, User } from "./types";
 
 import ProfileCard from "./components/ProfileCard";
+import Pagination from "./components/Pagination";
 
 function Home() {
-  const inputRef = useRef<HTMLInputElement>(null);
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
-  const query = inputRef.current?.value
-    ? `nameStartsWith=${inputRef.current.value}`
-    : "";
-  const characters = useCharacters(query);
-
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
+  const { page = 0, search } = queryParams;
+  const inputRef = useRef<HTMLInputElement>(null);
   const fetchLimit = 20;
-  const lastPage = Math.round(total / fetchLimit);
+  const offset = Number(page) * fetchLimit;
 
-  async function getNextCharacters(newPage: number) {
-    if (newPage < 1) return;
-    setPage(newPage);
-  }
+  const params: CharactersParams = {
+    limit: fetchLimit,
+    offset: offset > 0 ? offset - fetchLimit : 0,
+    search: search ? `nameStartsWith=${search}` : "",
+  };
 
-  const formattedCharacters: User[] | undefined = characters?.map((character) =>
-    formatMarvelCharacterToUser(character)
-  );
+  const { results, total } = useCharacters(params);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     setQueryParams({
+      page: 0,
       search: inputRef.current?.value,
     });
   }
 
+  const formattedCharacters: User[] = results?.map((character) =>
+    formatMarvelCharacterToUser(character)
+  );
+
   if (formattedCharacters?.length === 0)
     return (
-      <div className="h-screen flex justify-center items-center text-white">
+      <div className="h-screen flex flex-col justify-center items-center gap-6 text-white">
         Loading...
       </div>
     );
@@ -52,6 +50,8 @@ function Home() {
   // TODO encapsulate getNextCharacters in two different funcs to fetch prev or next and do the necessary checks before
 
   // TODO 2 move code to pagination component
+
+  console.log("characters", results);
 
   return (
     <div className="flex flex-col  min-h-screen p-6 md:p-24">
@@ -73,71 +73,9 @@ function Home() {
         ))}
       </ul>
 
-      {total > 0 && (
-        <div className="w-full flex justify-center items-center gap-12 text-gray-100 mt-12 transition-all ">
-          <button
-            className="hover:scale-[1.05] disabled:text-gray-600"
-            disabled={page === 1}
-            onClick={() => {
-              if (page - 1 < 1) return;
-              getNextCharacters(page - 1);
-            }}
-          >
-            <MoveLeft size={24} />
-          </button>
-
-          <div className="flex gap-4">
-            {page - 1 > 0 && (
-              <button
-                className="text-gray-600 hover:text-white"
-                onClick={() => {
-                  if (page - 1 < 1) return;
-                  getNextCharacters(page - 1);
-                }}
-              >
-                {page - 1}
-              </button>
-            )}
-
-            <div>{page}</div>
-
-            {page !== lastPage && (
-              <button
-                className="text-gray-600 hover:text-white"
-                onClick={() => {
-                  if (page === lastPage) return;
-                  getNextCharacters(page + 1);
-                }}
-              >
-                {page + 1}
-              </button>
-            )}
-
-            {page < lastPage - 3 && (
-              <>
-                <div>...</div>
-                <button
-                  className="text-gray-600 hover:text-white"
-                  onClick={() => getNextCharacters(lastPage)}
-                >
-                  {lastPage}
-                </button>
-              </>
-            )}
-          </div>
-
-          <button
-            className="hover:scale-[1.05] disabled:text-gray-600"
-            disabled={page === lastPage}
-            onClick={() => {
-              if (page === lastPage) return;
-              getNextCharacters(page + 1);
-            }}
-          >
-            <MoveRight size={24} />
-          </button>
-        </div>
-      )}
+      <div className="flex justify-center items-center mt-12">
+        <Pagination total={total} />
+      </div>
     </div>
   );
 }

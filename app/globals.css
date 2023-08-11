@@ -19,3 +19,20 @@
 body {
   background: #200224;
 }
+
+/* ant design overrides */
+.ant-pagination-item a,
+.ant-pagination-item-ellipsis,
+.ant-pagination-jump-prev span,
+.ant-pagination-jump-next span {
+    color: #fff !important;
+}
+
+.ant-pagination-item-active a {
+    color: #000 !important;
+}
+
+.ant-pagination-prev svg,
+.ant-pagination-next svg {
+  color: #fff;
+}
