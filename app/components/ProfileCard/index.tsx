@@ -1,3 +1,6 @@
+import Avatar from "../Avatar";
+import ButtonFollow from "../ButtonFollow";
+
 export interface ProfileCardProps {
   description: string;
   image: string;
@@ -12,23 +15,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   title,
 }) => {
   return (
-    <div className="h-[320px] w-[360px] flex flex-col p-6 rounded-[48px] bg-gray-800/25 border-[0.5px] border-fuchsia-300 transition-all hover:bg-fuchsia-300/10 hover:border-fuchsia-400 hover:scale-[1.005]">
+    <div className="h-[320px] min-w-[320px] max-w-[640px] flex flex-col p-6 rounded-[48px] bg-gray-800/25 border-[0.5px] border-fuchsia-300 transition-all hover:bg-fuchsia-300/10 hover:border-fuchsia-400 hover:scale-[1.005]">
       <div className="flex justify-between items-start mb-6">
-        <img
-          alt="User profile picture"
-          className="h-20 w-20 rounded-full object-contain"
-          src={image}
-        />
-        <button className="lowercase text-sm text-white/80 bg-fuchsia-400/60 px-4 py-[2px] rounded-3xl transition-all hover:text-white hover:bg-fuchsia-400 hover:scale-[1.02]">
-          Follow
-        </button>
+        <Avatar src={image} />
+        <ButtonFollow />
       </div>
 
       <div className="mb-5">
-        <h2 className="max-w-[360px] truncate text-lg text-gray-400 hover:underline hover:text-gray-400/60">
+        <h2 className="max-w-[320px] truncate text-lg text-gray-400 hover:underline hover:text-gray-400/60">
           {subtitle}
         </h2>
-        <h1 className="max-w-[360px] truncate text-2xl text-gray-200 hover:text-white">
+        <h1 className="max-w-[320px] truncate text-2xl text-gray-200 hover:text-white">
           {title}
         </h1>
       </div>

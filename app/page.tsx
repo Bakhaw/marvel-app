@@ -41,31 +41,31 @@ function Home() {
   );
 
   return (
-    <div className="flex flex-col  min-h-screen p-6 md:p-24">
-      <form className="mb-10 md:self-start px-6" onSubmit={onSubmit}>
+    <div className="min-h-screen p-4 sm:p-6 flex flex-col gap-6">
+      <form onSubmit={onSubmit}>
         <input
           defaultValue={queryParams.search}
-          placeholder="Search hulk for example"
+          placeholder="Search Hulk for example"
           ref={inputRef}
-          className="py-2 px-4 rounded-full bg-purple-200"
+          className="max-sm:w-full py-2 px-4 rounded-full bg-purple-200"
         />
       </form>
 
       {isFetching ? (
-        <div className="h-full w-full grid grid-cols-fill place-items-center gap-x-6 gap-y-16">
+        <div className="h-full w-full grid grid-cols-fill gap-4 sm:gap-6">
           {[...Array(fetchLimit)].map((d, i) => (
             <Skeleton
               key={i}
               active={isFetching}
               loading={isFetching}
               avatar
-              className="h-[320px] w-[360px] flex flex-col p-6 rounded-[48px] bg-fuchsia-300/20"
+              className="h-[320px] min-w-[320px] flex flex-col p-6 rounded-[48px] bg-fuchsia-300/20 border-[0.5px] border-fuchsia-300"
             />
           ))}
         </div>
       ) : (
         <>
-          <ul className="h-full w-full grid grid-cols-fill place-items-center gap-x-6 gap-y-16">
+          <ul className="h-full w-full grid grid-cols-fill gap-4 sm:gap-6">
             {formattedCharacters?.map((user, i) => (
               <Link key={i} href={`/user/${user.id}`}>
                 <li>
@@ -74,12 +74,12 @@ function Home() {
               </Link>
             ))}
           </ul>
-
-          <div className="flex justify-center items-center mt-12">
-            <Pagination perPage={fetchLimit} total={data?.total ?? 0} />
-          </div>
         </>
       )}
+
+      <div className="flex justify-center items-center h-16">
+        {data && <Pagination perPage={fetchLimit} total={data.total} />}
+      </div>
     </div>
   );
 }

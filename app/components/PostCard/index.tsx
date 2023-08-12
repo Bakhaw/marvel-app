@@ -30,7 +30,7 @@ const PostCard: React.FC<PostCardProps> = ({
         </div>
       </div>
 
-      <p className="text-lg text-gray-200 max-w-[360px]">{description}</p>
+      <p className="text-lg text-gray-200 max-w-[320px]">{description}</p>
     </div>
   );
 };
