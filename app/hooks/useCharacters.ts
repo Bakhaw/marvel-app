@@ -28,10 +28,10 @@ export function useCharacters({ limit, offset, search }: CharactersParams) {
     search ? `nameStartsWith=${search}` : ""
   }&offset=${offset}`;
 
-  const { data, isLoading, isFetching } = useQuery<CharactersType>({
+  const { data, isFetching } = useQuery<CharactersType>({
     queryKey: ["characters", query],
     queryFn: () => fetchCharacters(query),
   });
 
-  return { data, isLoading, isFetching };
+  return { data, isFetching };
 }

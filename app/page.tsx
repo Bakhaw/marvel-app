@@ -16,16 +16,16 @@ function Home() {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
   const { page = 0, search } = queryParams;
   const inputRef = useRef<HTMLInputElement>(null);
-  const fetchLimit = 50;
+  const fetchLimit = 20;
   const offset = Number(page) * fetchLimit;
 
   const params: CharactersParams = {
     limit: fetchLimit,
     offset: offset > 0 ? offset - fetchLimit : 0,
-    search: search ? `nameStartsWith=${search}` : "",
+    search: search ? search : "",
   };
 
-  const { data, isLoading, isFetching } = useCharacters(params);
+  const { data, isFetching } = useCharacters(params);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
