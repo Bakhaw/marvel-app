@@ -11,6 +11,7 @@ import { QueryParams, User } from "./types";
 
 import Pagination from "./components/Pagination";
 import ProfileCard from "./components/ProfileCard";
+import TotalResults from "./components/TotalResults";
 
 function Home() {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
@@ -42,14 +43,20 @@ function Home() {
 
   return (
     <div className="min-h-screen p-4 sm:p-6 flex flex-col gap-6">
-      <form onSubmit={onSubmit}>
-        <input
-          defaultValue={queryParams.search}
-          placeholder="Search Hulk for example"
-          ref={inputRef}
-          className="max-sm:w-full py-2 px-4 rounded-full bg-purple-200"
-        />
-      </form>
+      <div className="flex flex-col gap-2">
+        <form onSubmit={onSubmit}>
+          <input
+            defaultValue={queryParams.search}
+            placeholder="Search"
+            ref={inputRef}
+            className="max-sm:w-full py-2 px-4 bg-purple-200 rounded-full"
+          />
+        </form>
+
+        {!isFetching && (
+          <TotalResults query={queryParams.search} total={data?.total} />
+        )}
+      </div>
 
       {isFetching ? (
         <div className="h-full w-full grid grid-cols-fill gap-4 sm:gap-6">
@@ -59,7 +66,7 @@ function Home() {
               active={isFetching}
               loading={isFetching}
               avatar
-              className="h-[320px] min-w-[320px] flex flex-col p-6 rounded-[48px] bg-fuchsia-300/20 border-[0.5px] border-fuchsia-300"
+              className="h-[320px] min-w-[300px] flex flex-col p-6 rounded-[48px] bg-fuchsia-300/20 border-[0.5px] border-fuchsia-300"
             />
           ))}
         </div>

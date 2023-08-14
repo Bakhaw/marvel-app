@@ -12,6 +12,7 @@ import {
 } from "@/app/lib";
 import { MarvelCharacter, Post, User } from "@/app/types";
 
+import ButtonBack from "@/app/components/ButtonBack";
 import PostCard from "@/app/components/PostCard";
 import ProfileCard from "@/app/components/ProfileCard";
 
@@ -75,8 +76,12 @@ function Page() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen flex flex-col items-center py-12">
-      <div className="mb-16">
+    <div className="min-h-screen max-w-[600px] flex flex-col items-center px-2 py-12 m-auto">
+      <div className="self-start mb-6">
+        <ButtonBack />
+      </div>
+
+      <div className="mb-16 w-full">
         <ProfileCard {...formatProfileCard(user)} />
       </div>
 
@@ -84,7 +89,7 @@ function Page() {
         <div className="text-white text-lg">Loading funny content 👾</div>
       )}
 
-      <ul className="space-y-6">
+      <ul className="space-y-6 w-full">
         {posts?.map((post, i) => (
           <li key={i}>
             <PostCard {...formatPostCard(user, post)} />

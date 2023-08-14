@@ -12,7 +12,7 @@ const PostCard: React.FC<PostCardProps> = ({
   title,
 }) => {
   return (
-    <div className="max-h-[320px] max-w-sm flex flex-col p-6 rounded-[48px] bg-gray-800/25 border-[0.5px] border-fuchsia-300 transition-all hover:bg-fuchsia-300/10 hover:border-fuchsia-400 hover:scale-[1.005]">
+    <div className="max-h-[320px] min-w-[300px] max-w-[600px] flex flex-col p-6 rounded-[48px] bg-gray-800/25 border-[0.5px] border-fuchsia-300 transition-all hover:bg-fuchsia-300/10 hover:border-fuchsia-400 hover:scale-[1.005]">
       <div className="flex gap-2">
         <img
           alt="User profile picture"
@@ -30,7 +30,7 @@ const PostCard: React.FC<PostCardProps> = ({
         </div>
       </div>
 
-      <p className="text-lg text-gray-200 max-w-[320px]">{description}</p>
+      <p className="text-lg text-gray-200 max-w-[300px]">{description}</p>
     </div>
   );
 };
