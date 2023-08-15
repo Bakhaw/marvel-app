@@ -8,8 +8,9 @@ import QueryContainer from "./components/QueryContainer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Marvel Socials",
-  description: "Social media based on Marvel universe",
+  title: "Dark Twitter",
+  description: "Social media based on different universe",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
