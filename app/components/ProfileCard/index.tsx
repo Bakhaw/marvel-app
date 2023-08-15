@@ -18,7 +18,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     <div className="h-[320px] min-w-[300px] max-w-[600px] flex flex-col p-6 rounded-[48px] bg-gray-800/25 border-[0.5px] border-fuchsia-300 transition-all hover:bg-fuchsia-300/10 hover:border-fuchsia-400 hover:scale-[1.005]">
       <div className="flex justify-between items-start mb-6">
         <Avatar src={image} />
-        <ButtonFollow />
+        <ButtonFollow
+          onClick={(e) => {
+            e.preventDefault();
+            alert("followed!");
+          }}
+        />
       </div>
 
       <div className="mb-5">
