@@ -4,7 +4,7 @@ interface TotalResultsProps {
 }
 
 const TotalResults: React.FC<TotalResultsProps> = ({ query, total }) => (
-  <div className="text-xs text-purple-100 text-left">
+  <div className="sm:text-sm text-purple-100 text-left">
     {total === 0 ? (
       <>
         no results for <span className="text-purple-300">{query}</span>

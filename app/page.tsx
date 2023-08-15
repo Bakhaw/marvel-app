@@ -12,12 +12,13 @@ import { QueryParams, User } from "./types";
 import Pagination from "./components/Pagination";
 import ProfileCard from "./components/ProfileCard";
 import TotalResults from "./components/TotalResults";
+import ProfileCardList from "./components/ProfileCardList";
 
 function Home() {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
   const { page = 0, search } = queryParams;
   const inputRef = useRef<HTMLInputElement>(null);
-  const fetchLimit = 20;
+  const fetchLimit = 10;
   const offset = Number(page) * fetchLimit;
 
   const params: CharactersParams = {
@@ -59,7 +60,7 @@ function Home() {
       </div>
 
       {isFetching ? (
-        <div className="h-full w-full grid grid-cols-fill gap-4 sm:gap-6">
+        <ul className="flex-1 h-full w-full grid grid-cols-fill gap-4 sm:gap-6">
           {[...Array(fetchLimit)].map((d, i) => (
             <Skeleton
               key={i}
@@ -69,19 +70,11 @@ function Home() {
               className="h-[320px] min-w-[300px] flex flex-col p-6 rounded-[48px] bg-fuchsia-300/20 border-[0.5px] border-fuchsia-300"
             />
           ))}
-        </div>
+        </ul>
       ) : (
-        <>
-          <ul className="h-full w-full grid grid-cols-fill gap-4 sm:gap-6">
-            {formattedCharacters?.map((user, i) => (
-              <Link key={i} href={`/user/${user.id}`}>
-                <li>
-                  <ProfileCard {...formatProfileCard(user)} />
-                </li>
-              </Link>
-            ))}
-          </ul>
-        </>
+        <ul className="flex-1 h-full w-full grid grid-cols-fill gap-4 sm:gap-6">
+          <ProfileCardList users={formattedCharacters} />
+        </ul>
       )}
 
       <div className="flex justify-center items-center h-16">
