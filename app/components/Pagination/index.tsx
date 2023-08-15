@@ -26,6 +26,7 @@ const Pagination: React.FC<PaginationProps> = ({ perPage, total }) => {
       pageSize={perPage}
       total={total}
       showSizeChanger={false}
+      responsive
     />
   );
 };

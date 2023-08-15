@@ -14,7 +14,7 @@ const ProfileCardList: React.FC<ProfileCardListProps> = ({ users }) => {
 
   if (!users?.length) {
     return (
-      <div className="text-sm col-span-full mx-auto flex items-center justify-center w-full text-white">
+      <div className="text-xs sm:text-sm col-span-full mx-auto flex items-center justify-center w-full text-white">
         no users found
       </div>
     );
