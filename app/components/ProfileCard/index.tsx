@@ -20,8 +20,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <Avatar src={image} />
         <ButtonFollow
           onClick={(e) => {
-            e.preventDefault();
-            alert("followed!");
+            console.log("followed!");
           }}
         />
       </div>

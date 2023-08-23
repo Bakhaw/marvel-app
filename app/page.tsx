@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useRef } from "react";
-import Link from "next/link";
 import { Skeleton } from "antd";
 
 import { useQueryParams } from "./hooks/useQueryParams";
@@ -48,9 +47,10 @@ function Home() {
         <form onSubmit={onSubmit}>
           <input
             defaultValue={queryParams.search}
+            disabled={isFetching}
             placeholder="Search"
             ref={inputRef}
-            className="max-sm:w-full py-2 px-4 bg-purple-200 rounded-full"
+            className="max-sm:w-full py-2 px-4 bg-purple-200 disabled:bg-purple-200/30 rounded-full"
           />
         </form>
 
