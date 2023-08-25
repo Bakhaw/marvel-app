@@ -6,11 +6,13 @@ import { useParams } from "next/navigation";
 import { useCharacter } from "@/app/hooks/useCharacter";
 import {
   chat,
-  formatMarvelCharacterToUser,
+  formatCharacterToUser,
   formatPostCard,
   formatProfileCard,
+  isHarryPotterCharacter,
+  isMarvelCharacter,
 } from "@/app/lib";
-import { MarvelCharacter, Post, User } from "@/app/types";
+import { Character, Post, User, World } from "@/app/types";
 
 import ButtonBack from "@/app/components/ButtonBack";
 import PostCard from "@/app/components/PostCard";
@@ -20,6 +22,8 @@ function Page() {
   const { id: userId } = useParams();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
+  // const world = World.marvel; // todo get this from query params
+  const world = World.harry_potter; // todo get this from query params
 
   async function getPosts(user: User) {
     // const prompt = `Écris trois tweets comme si tu étais Vegeta (Dragon Ball).
@@ -58,13 +62,22 @@ function Page() {
     getPosts(user);
   }, [user?.id]);
 
-  const character = useCharacter(userId.toString());
+  const character = useCharacter(userId.toString(), world);
 
-  function initUser(character: MarvelCharacter) {
-    character.description = ""; // 🥶🥶🥶
+  function initUser(character: Character) {
+    const isMarvel = isMarvelCharacter(character);
+    const isHarryPotter = isHarryPotterCharacter(character);
 
-    const characterToUser = formatMarvelCharacterToUser(character);
-    setUser(characterToUser);
+    if (isMarvel) {
+      character.description = ""; // 🥶🥶🥶
+    }
+
+    if (isHarryPotter) {
+      character.house = "";
+    }
+
+    const user = formatCharacterToUser(character);
+    setUser(user);
   }
 
   useEffect(() => {

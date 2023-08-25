@@ -6,7 +6,7 @@ import { User } from "@/app/types";
 import ProfileCard from "../ProfileCard";
 
 interface ProfileCardListProps {
-  users?: User[];
+  users: User[] | null;
 }
 
 const ProfileCardList: React.FC<ProfileCardListProps> = ({ users }) => {

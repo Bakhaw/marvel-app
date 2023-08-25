@@ -1,3 +1,4 @@
+import { World } from "@/app/types";
 import { NextRequest, NextResponse } from "next/server";
 
 const MarvelConfig = {
@@ -5,13 +6,33 @@ const MarvelConfig = {
   hash: process.env.MARVEL_HASH,
 };
 
-export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const params = `?ts=1&apikey=${MarvelConfig.apiKey}&hash=${
-    MarvelConfig.hash
-  }${body.query ? `&${body.query}` : ""}`;
+interface Body {
+  query: string;
+  world: World;
+}
 
-  const url = `https://gateway.marvel.com:443/v1/public/characters${params}`;
+const urlObj = (params: string) => ({
+  [World.marvel]: `https://gateway.marvel.com:443/v1/public/characters${params}`,
+  [World.harry_potter]: `https://hp-api.onrender.com/api/characters${params}`,
+});
+
+const getUrl = (params: string, world: World) => urlObj(params)[world];
+
+export async function POST(req: NextRequest) {
+  const body: Body = await req.json();
+
+  const paramsObj = {
+    [World.marvel]: `?ts=1&apikey=${MarvelConfig.apiKey}&hash=${
+      MarvelConfig.hash
+    }${body.query ? `&${body.query}` : ""}`,
+    [World.harry_potter]: "",
+  };
+
+  const getParams = (world: World) => paramsObj[world];
+  const params = getParams(body.world);
+  const url = getUrl(params, body.world);
+
+  if (!url) return;
 
   try {
     const response = await fetch(url, {

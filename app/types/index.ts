@@ -6,6 +6,15 @@ export interface User {
   username: string; // @username
 }
 
+export interface HarryPotterCharacter {
+  id: string;
+  name: string;
+  species: string;
+  gender: string;
+  house: string;
+  image: string;
+}
+
 export interface MarvelCharacter {
   description: string;
   id: number;
@@ -32,3 +41,15 @@ export interface QueryParams {
   page: number;
   search: string;
 }
+
+export enum World {
+  marvel = "marvel",
+  harry_potter = "harry_potter",
+}
+
+export type Character = MarvelCharacter | HarryPotterCharacter;
+export type Characters = MarvelCharacter[] | HarryPotterCharacter[];
+export type CharactersApiResponse<TData> = {
+  total: number;
+  data: TData;
+};

@@ -3,15 +3,14 @@
 import { FormEvent, useRef } from "react";
 import { Skeleton } from "antd";
 
-import { useQueryParams } from "./hooks/useQueryParams";
 import { CharactersParams, useCharacters } from "./hooks/useCharacters";
-import { formatMarvelCharacterToUser, formatProfileCard } from "./lib";
-import { QueryParams, User } from "./types";
+import { useQueryParams } from "./hooks/useQueryParams";
+import { formatCharactersToUsers } from "./lib";
+import { Characters, CharactersApiResponse, QueryParams, World } from "./types";
 
 import Pagination from "./components/Pagination";
-import ProfileCard from "./components/ProfileCard";
-import TotalResults from "./components/TotalResults";
 import ProfileCardList from "./components/ProfileCardList";
+import TotalResults from "./components/TotalResults";
 
 function Home() {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
@@ -19,14 +18,24 @@ function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const fetchLimit = 10;
   const offset = Number(page) * fetchLimit;
+  // const world = World.marvel; // todo get this from query params
+  const world = World.harry_potter; // todo get this from query params
 
   const params: CharactersParams = {
     limit: fetchLimit,
     offset: offset > 0 ? offset - fetchLimit : 0,
     search: search ? search : "",
+    world,
   };
 
   const { data, isFetching } = useCharacters(params);
+
+  const formattedCharactersObj = (
+    characters: CharactersApiResponse<Characters>
+  ) => ({
+    [World.marvel]: formatCharactersToUsers(characters.data),
+    [World.harry_potter]: formatCharactersToUsers(characters.data),
+  });
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,9 +46,9 @@ function Home() {
     });
   }
 
-  const formattedCharacters: User[] | undefined = data?.results?.map(
-    (character) => formatMarvelCharacterToUser(character)
-  );
+  if (!data) return null;
+
+  const formattedCharacters = formattedCharactersObj(data)[world];
 
   return (
     <div className="min-h-screen p-4 sm:p-6 flex flex-col gap-6">
@@ -55,7 +64,7 @@ function Home() {
         </form>
 
         {!isFetching && (
-          <TotalResults query={queryParams.search} total={data?.total} />
+          <TotalResults query={queryParams.search} total={data.total} />
         )}
       </div>
 

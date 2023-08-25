@@ -1,23 +1,61 @@
 import { useEffect, useState } from "react";
 
-import { MarvelCharacter } from "../types";
+import { Character, Characters, CharactersApiResponse, World } from "../types";
 
-export function useCharacter(characterId: string) {
-  const [character, setCharacter] = useState<MarvelCharacter | null>(null);
+async function fetchCharacter(
+  characterId: string,
+  world: World
+): Promise<CharactersApiResponse<Characters>> {
+  const response = await fetch(`/api/characters/${characterId}`, {
+    method: "POST",
+    body: JSON.stringify({ characterId, world }),
+  }).then((res) => res.json());
 
-  async function getCharacter(characterId: string) {
-    const response = await fetch(`/api/characters/${characterId}`, {
-      method: "POST",
-      body: JSON.stringify({ characterId }),
-    }).then((res) => res.json());
+  let character: CharactersApiResponse<Characters> = {
+    data: [],
+    total: 0,
+  };
 
-    const character: MarvelCharacter = response.data.data.results[0];
-    setCharacter(character);
+  switch (world) {
+    case World.marvel:
+      character = {
+        data: response.data.data.results,
+        total: response.data.data.total,
+      };
+      break;
+
+    case World.harry_potter:
+      character = {
+        data: response.data,
+        total: response.data.length,
+      };
+
+    default:
+      break;
+  }
+
+  return character;
+}
+
+const methods = (characterId: string) => ({
+  [World.marvel]: fetchCharacter(characterId, World.marvel),
+  [World.harry_potter]: fetchCharacter(characterId, World.harry_potter),
+});
+
+const getMethod = async (characterId: string, world: World) =>
+  await methods(characterId)[world];
+
+export function useCharacter(characterId: string, world: World) {
+  const [character, setCharacter] = useState<Character | null>(null);
+
+  async function getCharacter() {
+    const character = await getMethod(characterId, world);
+    setCharacter(character.data[0]);
   }
 
   useEffect(() => {
-    getCharacter(characterId);
-  }, [characterId]);
+    getCharacter();
+  }, [characterId, world]);
 
   return character;
 }
