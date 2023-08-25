@@ -8,9 +8,6 @@ const withPWA = require("next-pwa")({
 });
 
 const nextConfig = withPWA({
-  experimental: {
-    typedRoutes: true,
-  },
   images: {
     domains: ["i.annihil.us", "ik.imagekit.io"], // images coming from different apis
   },
