@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { Skeleton } from "antd";
 
 import { useCharacter } from "@/app/hooks/useCharacter";
 import {
@@ -86,7 +87,45 @@ function Page() {
     initUser(character);
   }, [character]);
 
-  if (!user) return null;
+  if (!user)
+    return (
+      <div className="text-white text-lg min-h-screen max-w-[600px] flex flex-col items-center px-2 py-12 m-auto">
+        <div className="self-start mb-6">
+          <ButtonBack />
+        </div>
+
+        <div className="flex-1 h-full w-full grid grid-cols-fill gap-4 sm:gap-6">
+          <Skeleton
+            active
+            loading
+            avatar
+            className="h-[320px] min-w-[300px] flex flex-col p-6 rounded-[48px] bg-fuchsia-300/20 border-[0.5px] border-fuchsia-300"
+          />
+
+          <div className="flex flex-col gap-6">
+            <Skeleton
+              active
+              loading
+              paragraph={{
+                rows: 1,
+                style: {
+                  marginTop: 16,
+                },
+              }}
+              avatar
+              className="h-[140px] min-w-[300px] flex flex-col p-6 rounded-[48px] bg-fuchsia-300/20 border-[0.5px] border-fuchsia-300"
+            />
+
+            <Skeleton
+              active
+              loading
+              avatar
+              className="h-[180px] min-w-[300px] flex flex-col p-6 rounded-[48px] bg-fuchsia-300/20 border-[0.5px] border-fuchsia-300"
+            />
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <div className="min-h-screen max-w-[600px] flex flex-col items-center px-2 py-12 m-auto">
@@ -98,17 +137,17 @@ function Page() {
         <ProfileCard {...formatProfileCard(user)} />
       </div>
 
-      {!posts && (
+      {posts ? (
+        <ul className="space-y-6 w-full">
+          {posts.map((post, i) => (
+            <li key={i}>
+              <PostCard {...formatPostCard(user, post)} />
+            </li>
+          ))}
+        </ul>
+      ) : (
         <div className="text-white text-lg">Loading funny content 👾</div>
       )}
-
-      <ul className="space-y-6 w-full">
-        {posts?.map((post, i) => (
-          <li key={i}>
-            <PostCard {...formatPostCard(user, post)} />
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
