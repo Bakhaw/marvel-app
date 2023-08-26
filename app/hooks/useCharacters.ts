@@ -4,7 +4,9 @@ import { Characters, CharactersApiResponse, World } from "@/app/types";
 
 async function fetchCharacters(
   query: string,
-  world: World
+  world: World,
+  offset?: number,
+  limit?: number
 ): Promise<CharactersApiResponse<Characters>> {
   const response = await fetch("/api/characters", {
     method: "POST",
@@ -29,7 +31,7 @@ async function fetchCharacters(
 
     case World.harry_potter:
       characters = {
-        data: response.data,
+        data: response.data.splice(offset, limit),
         total: response.data.length,
       };
 
@@ -40,13 +42,22 @@ async function fetchCharacters(
   return characters;
 }
 
-const methods = (query: string) => ({
+const methods = (query: string, offset?: number, limit?: number) => ({
   [World.marvel]: fetchCharacters(query, World.marvel),
-  [World.harry_potter]: fetchCharacters(query, World.harry_potter),
+  [World.harry_potter]: fetchCharacters(
+    query,
+    World.harry_potter,
+    offset,
+    limit
+  ),
 });
 
-const getMethod = async (query: string, world: World) =>
-  await methods(query)[world];
+const getMethod = async (
+  query: string,
+  world: World,
+  offset?: number,
+  limit?: number
+) => await methods(query, offset, limit)[world];
 
 export type CharactersParams = {
   limit: number;
@@ -68,7 +79,7 @@ export function useCharacters({
 
   const { data, isFetching } = useQuery<CharactersApiResponse<Characters>>({
     queryKey: ["characters", query],
-    queryFn: () => getMethod(query, world),
+    queryFn: () => getMethod(query, world, offset, limit),
   });
 
   return { data, isFetching };
