@@ -9,7 +9,11 @@ const withPWA = require("next-pwa")({
 
 const nextConfig = withPWA({
   images: {
-    domains: ["i.annihil.us", "ik.imagekit.io"], // images coming from different apis
+    domains: [
+      "i.annihil.us", // marvel api
+      "ik.imagekit.io", // harry-potter api
+      "static.wikia.nocookie.net", // naruto api
+    ],
   },
 });
 

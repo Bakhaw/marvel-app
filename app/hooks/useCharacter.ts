@@ -30,6 +30,12 @@ async function fetchCharacter(
         total: response.data.length,
       };
 
+    case World.naruto:
+      character = {
+        data: response.data,
+        total: 1,
+      };
+
     default:
       break;
   }
@@ -40,6 +46,7 @@ async function fetchCharacter(
 const methods = (characterId: string) => ({
   [World.marvel]: fetchCharacter(characterId, World.marvel),
   [World.harry_potter]: fetchCharacter(characterId, World.harry_potter),
+  [World.naruto]: fetchCharacter(characterId, World.naruto),
 });
 
 const getMethod = async (characterId: string, world: World) =>
@@ -50,7 +57,7 @@ export function useCharacter(characterId: string, world: World) {
 
   async function getCharacter() {
     const character = await getMethod(characterId, world);
-    setCharacter(character.data[0]);
+    setCharacter(character.data[0] ?? character.data);
   }
 
   useEffect(() => {

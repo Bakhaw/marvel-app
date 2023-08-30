@@ -3,6 +3,7 @@ import {
   Characters,
   HarryPotterCharacter,
   MarvelCharacter,
+  NarutoCharacter,
   Post,
   User,
 } from "../types";
@@ -10,6 +11,7 @@ import {
 import { PostCardProps } from "../components/PostCard";
 import { ProfileCardProps } from "../components/ProfileCard";
 
+// todo tout ça c'est guez
 export function isMarvelCharacter(
   character: Character
 ): character is MarvelCharacter {
@@ -21,6 +23,13 @@ export function isHarryPotterCharacter(
 ): character is HarryPotterCharacter {
   return "house" in character;
 }
+
+export function isNarutoCharacter(
+  character: Character
+): character is NarutoCharacter {
+  return "personal" in character;
+}
+// todo tout ça c'est guez
 
 export function formatProfileCard(user: User): ProfileCardProps {
   return {
@@ -46,6 +55,7 @@ export function formatCharactersToUsers(characters: Characters): User[] {
   characters.map((character) => {
     const isMarvel = isMarvelCharacter(character);
     const isHarryPotter = isHarryPotterCharacter(character);
+    const isNaruto = isNarutoCharacter(character);
 
     if (isMarvel) {
       users.push({
@@ -66,6 +76,16 @@ export function formatCharactersToUsers(characters: Characters): User[] {
         username: `${character.name.toLowerCase().split(" ").join("-")}`,
       });
     }
+
+    if (isNaruto) {
+      users.push({
+        bio: character.personal.species,
+        displayName: character.name,
+        id: String(character.id),
+        image: character.images[0],
+        username: `${character.name.toLowerCase().split(" ").join("-")}`,
+      });
+    }
   });
 
   return users;
@@ -82,6 +102,7 @@ export function formatCharacterToUser(character: Character): User {
 
   const isMarvel = isMarvelCharacter(character);
   const isHarryPotter = isHarryPotterCharacter(character);
+  const isNaruto = isNarutoCharacter(character);
 
   if (isMarvel) {
     user = {
@@ -103,40 +124,18 @@ export function formatCharacterToUser(character: Character): User {
     };
   }
 
+  if (isNaruto) {
+    user = {
+      bio: character.personal.species,
+      displayName: character.name,
+      id: String(character.id),
+      image: character.images[0],
+      username: `${character.name.toLowerCase().split(" ").join("-")}`,
+    };
+  }
+
   return user;
 }
-
-// export function formatMarvelCharacterToUser(
-//   characters: MarvelCharacter[]
-// ): User[] | null {
-//   if (!characters) return null;
-
-//   const newCharacters = characters.map((character) => ({
-//     bio: character.description,
-//     displayName: character.name,
-//     id: String(character.id),
-//     image: `${character.thumbnail.path}.${character.thumbnail.extension}`,
-//     username: `${character.name.toLowerCase().split(" ").join("-")}`,
-//   }));
-
-//   return newCharacters;
-// }
-
-// export function formatHarryPotterCharacterToUser(
-//   characters: HarryPotterCharacter[]
-// ): User[] | null {
-//   if (!characters) return null;
-
-//   const newCharacters = characters.map((character) => ({
-//     bio: character.house,
-//     displayName: character.name,
-//     id: String(character.id),
-//     image: character.image,
-//     username: `${character.name.toLowerCase().split(" ").join("-")}`,
-//   }));
-
-//   return newCharacters;
-// }
 
 export async function chat(prompt: string) {
   try {

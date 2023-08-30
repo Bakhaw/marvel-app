@@ -15,6 +15,7 @@ interface Body {
 const urlObj = (characterId: string, params: string) => ({
   [World.marvel]: `https://gateway.marvel.com:443/v1/public/characters${params}`,
   [World.harry_potter]: `https://hp-api.onrender.com/api/character/${characterId}${params}`,
+  [World.naruto]: `https://narutodb.xyz/api/character/${characterId}${params}`,
 });
 
 const getUrl = (characterId: string, params: string, world: World) =>
@@ -26,6 +27,7 @@ export async function POST(req: NextRequest) {
   const paramsObj = {
     [World.marvel]: `?ts=1&apikey=${MarvelConfig.apiKey}&hash=${MarvelConfig.hash}`,
     [World.harry_potter]: "",
+    [World.naruto]: "",
   };
 
   const getParams = (world: World) => paramsObj[world];

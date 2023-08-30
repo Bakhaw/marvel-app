@@ -24,8 +24,8 @@ async function fetchCharacters(
   switch (world) {
     case World.marvel:
       characters = {
-        data: response.data.data.results,
-        total: response.data.data.total,
+        data: response.data?.data?.results,
+        total: response.data?.data?.total,
       };
       break;
 
@@ -34,6 +34,14 @@ async function fetchCharacters(
         data: response.data.splice(offset, limit),
         total: response.data.length,
       };
+      break;
+
+    case World.naruto:
+      characters = {
+        data: response.data.characters,
+        total: response.data.totalCharacters,
+      };
+      break;
 
     default:
       break;
@@ -50,6 +58,7 @@ const methods = (query: string, offset?: number, limit?: number) => ({
     offset,
     limit
   ),
+  [World.naruto]: fetchCharacters(query, World.naruto),
 });
 
 const getMethod = async (
@@ -64,7 +73,19 @@ export type CharactersParams = {
   offset: number;
   search: string;
   world: World;
+  page: number;
 };
+
+const queryObj = ({ limit, offset, search, page }: CharactersParams) => ({
+  [World.marvel]: `limit=${limit}&offset=${offset}${
+    search ? `&nameStartsWith=${search}` : ""
+  }`,
+  [World.harry_potter]: `limit=${limit}&offset=${offset}`,
+  [World.naruto]: `limit=${limit}&page=${page}`,
+});
+
+const getQueryObj = (params: CharactersParams, world: World) =>
+  queryObj(params)[world];
 
 // react-query
 export function useCharacters({
@@ -72,10 +93,17 @@ export function useCharacters({
   offset,
   search,
   world,
+  page,
 }: CharactersParams) {
-  const query = `limit=${limit}&${
-    search ? `nameStartsWith=${search}` : ""
-  }&offset=${offset}`;
+  const params = {
+    limit,
+    offset,
+    search,
+    world,
+    page,
+  };
+
+  const query = getQueryObj(params, world);
 
   const { data, isFetching } = useQuery<CharactersApiResponse<Characters>>({
     queryKey: ["characters", query],

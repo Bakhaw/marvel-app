@@ -1,5 +1,6 @@
-import { World } from "@/app/types";
 import { NextRequest, NextResponse } from "next/server";
+
+import { World } from "@/app/types";
 
 const MarvelConfig = {
   apiKey: process.env.MARVEL_API_KEY,
@@ -14,6 +15,7 @@ interface Body {
 const urlObj = (params: string) => ({
   [World.marvel]: `https://gateway.marvel.com:443/v1/public/characters${params}`,
   [World.harry_potter]: `https://hp-api.onrender.com/api/characters${params}`,
+  [World.naruto]: `https://www.narutodb.xyz/api/character${params}`,
 });
 
 const getUrl = (params: string, world: World) => urlObj(params)[world];
@@ -26,6 +28,7 @@ export async function POST(req: NextRequest) {
       MarvelConfig.hash
     }${body.query ? `&${body.query}` : ""}`,
     [World.harry_potter]: "",
+    [World.naruto]: body.query ? `?${body.query}` : "",
   };
 
   const getParams = (world: World) => paramsObj[world];

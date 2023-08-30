@@ -6,6 +6,17 @@ export interface User {
   username: string; // @username
 }
 
+export interface NarutoCharacter {
+  id: string;
+  name: string;
+  images: string[];
+  jutsu: string[];
+  personal: {
+    species: string;
+  };
+  uniqueTraits: string[];
+}
+
 export interface HarryPotterCharacter {
   id: string;
   name: string;
@@ -45,11 +56,22 @@ export interface QueryParams {
 export enum World {
   marvel = "marvel",
   harry_potter = "harry_potter",
+  naruto = "naruto",
 }
 
-export type Character = MarvelCharacter | HarryPotterCharacter;
-export type Characters = MarvelCharacter[] | HarryPotterCharacter[];
+export type Character =
+  | MarvelCharacter
+  | HarryPotterCharacter
+  | NarutoCharacter;
+
+export type Characters =
+  | MarvelCharacter[]
+  | HarryPotterCharacter[]
+  | NarutoCharacter[];
+
 export type CharactersApiResponse<TData> = {
   total: number;
   data: TData;
 };
+
+export const WORLD = World.naruto; // todo get this from query params

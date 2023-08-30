@@ -6,7 +6,7 @@ import { Skeleton } from "antd";
 import { CharactersParams, useCharacters } from "./hooks/useCharacters";
 import { useQueryParams } from "./hooks/useQueryParams";
 import { formatCharactersToUsers } from "./lib";
-import { Characters, CharactersApiResponse, QueryParams, World } from "./types";
+import { QueryParams, WORLD } from "./types";
 
 import Pagination from "./components/Pagination";
 import ProfileCardList from "./components/ProfileCardList";
@@ -16,26 +16,18 @@ function Home() {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
   const { page = 0, search } = queryParams;
   const inputRef = useRef<HTMLInputElement>(null);
-  const fetchLimit = 10;
+  const fetchLimit = 20;
   const offset = Number(page) * fetchLimit;
-  // const world = World.marvel; // todo get this from query params
-  const world = World.harry_potter; // todo get this from query params
 
   const params: CharactersParams = {
     limit: fetchLimit,
     offset: offset > 0 ? offset - fetchLimit : 0,
     search: search ? search : "",
-    world,
+    world: WORLD,
+    page,
   };
 
   const { data, isFetching } = useCharacters(params);
-
-  const formattedCharactersObj = (
-    characters: CharactersApiResponse<Characters>
-  ) => ({
-    [World.marvel]: formatCharactersToUsers(characters.data),
-    [World.harry_potter]: formatCharactersToUsers(characters.data),
-  });
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -48,7 +40,7 @@ function Home() {
 
   if (!data) return null;
 
-  const formattedCharacters = formattedCharactersObj(data)[world];
+  const formattedCharacters = formatCharactersToUsers(data.data);
 
   return (
     <div className="min-h-screen p-4 sm:p-6 flex flex-col gap-6">
