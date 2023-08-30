@@ -20,19 +20,14 @@ body {
   background: #200224;
 }
 
-/* ant design overrides */
-.ant-pagination-item a,
-.ant-pagination-item-ellipsis,
-.ant-pagination-jump-prev span,
-.ant-pagination-jump-next span {
-    color: #fff !important;
+
+/* Mui overrides */
+.MuiPaginationItem-page,
+.MuiPaginationItem-ellipsis,
+.MuiPaginationItem-previousNext {
+  color: #a387a8 !important;
 }
 
-.ant-pagination-item-active a {
-    color: #000 !important;
-}
-
-.ant-pagination-prev svg,
-.ant-pagination-next svg {
-  color: #fff;
+.Mui-selected {
+  color: #cbb8ce !important;
 }

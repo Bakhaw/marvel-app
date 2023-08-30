@@ -1,7 +1,7 @@
 import { ChevronLeft } from "lucide-react";
 
 const ButtonPrev: React.FC = () => (
-  <button className="text-white align-middle">
+  <button>
     <ChevronLeft className="h-5" />
   </button>
 );
