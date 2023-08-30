@@ -51,6 +51,7 @@ export interface Post {
 export interface QueryParams {
   page: number;
   search: string;
+  world: World;
 }
 
 export enum World {
@@ -74,4 +75,4 @@ export type CharactersApiResponse<TData> = {
   data: TData;
 };
 
-export const WORLD = World.naruto; // todo get this from query params
+export const DEFAULT_WORLD = World.naruto; // todo get this from query params

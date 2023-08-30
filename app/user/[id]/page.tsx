@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Skeleton } from "antd";
 
 import { useCharacter } from "@/app/hooks/useCharacter";
+import { useQueryParams } from "@/app/hooks/useQueryParams";
 import {
   chat,
   formatCharacterToUser,
@@ -13,7 +14,7 @@ import {
   isHarryPotterCharacter,
   isMarvelCharacter,
 } from "@/app/lib";
-import { Character, Post, User, WORLD, World } from "@/app/types";
+import { Character, DEFAULT_WORLD, Post, QueryParams, User } from "@/app/types";
 
 import ButtonBack from "@/app/components/ButtonBack";
 import PostCard from "@/app/components/PostCard";
@@ -21,6 +22,9 @@ import ProfileCard from "@/app/components/ProfileCard";
 
 function Page() {
   const { id: userId } = useParams();
+  const {
+    queryParams: { world = DEFAULT_WORLD },
+  } = useQueryParams<QueryParams>();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
 
@@ -61,7 +65,7 @@ function Page() {
     getPosts(user);
   }, [user?.id]);
 
-  const character = useCharacter(userId.toString(), WORLD);
+  const character = useCharacter(userId.toString(), world);
 
   function initUser(character: Character) {
     const isMarvel = isMarvelCharacter(character);

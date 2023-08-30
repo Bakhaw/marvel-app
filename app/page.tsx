@@ -6,7 +6,7 @@ import { Skeleton } from "antd";
 import { CharactersParams, useCharacters } from "./hooks/useCharacters";
 import { useQueryParams } from "./hooks/useQueryParams";
 import { formatCharactersToUsers } from "./lib";
-import { QueryParams, WORLD } from "./types";
+import { DEFAULT_WORLD, QueryParams } from "./types";
 
 import Pagination from "./components/Pagination";
 import ProfileCardList from "./components/ProfileCardList";
@@ -14,7 +14,7 @@ import TotalResults from "./components/TotalResults";
 
 function Home() {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
-  const { page = 0, search } = queryParams;
+  const { page = 0, search, world = DEFAULT_WORLD } = queryParams;
   const inputRef = useRef<HTMLInputElement>(null);
   const fetchLimit = 20;
   const offset = Number(page) * fetchLimit;
@@ -23,7 +23,7 @@ function Home() {
     limit: fetchLimit,
     offset: offset > 0 ? offset - fetchLimit : 0,
     search: search ? search : "",
-    world: WORLD,
+    world,
     page,
   };
 
