@@ -15,6 +15,15 @@ const nextConfig = withPWA({
       "static.wikia.nocookie.net", // naruto api
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/marvel",
+        permanent: true,
+      },
+    ];
+  },
 });
 
 module.exports = nextConfig;

@@ -3,18 +3,25 @@
 import { FormEvent, useRef } from "react";
 import { Skeleton } from "antd";
 
-import { CharactersParams, useCharacters } from "./hooks/useCharacters";
-import { useQueryParams } from "./hooks/useQueryParams";
-import { formatCharactersToUsers } from "./lib";
-import { DEFAULT_WORLD, QueryParams } from "./types";
+import { CharactersParams, useCharacters } from "@/app/hooks/useCharacters";
+import { useQueryParams } from "@/app/hooks/useQueryParams";
+import { formatCharactersToUsers } from "@/app/lib";
+import { DEFAULT_WORLD, QueryParams, World } from "@/app/types";
 
-import Pagination from "./components/Pagination";
-import ProfileCardList from "./components/ProfileCardList";
-import TotalResults from "./components/TotalResults";
+import Pagination from "@/app/components/Pagination";
+import ProfileCardList from "@/app/components/ProfileCardList";
+import TotalResults from "@/app/components/TotalResults";
+import Link from "next/link";
 
-function Home() {
+interface HomeProps {
+  params: {
+    world: World;
+  };
+}
+
+const Home: React.FC<HomeProps> = ({ params: { world } }) => {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
-  const { page = 0, search, world = DEFAULT_WORLD } = queryParams;
+  const { page = 0, search } = queryParams;
   const inputRef = useRef<HTMLInputElement>(null);
   const fetchLimit = 20;
   const offset = Number(page) * fetchLimit;
@@ -37,6 +44,25 @@ function Home() {
       search: inputRef.current?.value,
     });
   }
+
+  console.log("world", world);
+
+  const worlds = Object.values(World);
+  if (!worlds.includes(world))
+    return (
+      <div className="h-screen flex flex-col justify-center items-center text-white">
+        <h1>You passed a wrong parameter</h1>
+        <h2>Which world do you want to explore ?</h2>
+
+        <ul>
+          {worlds.map((world) => (
+            <li key={world}>
+              <Link href={`/${world}`}>{world}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
 
   if (!data) return null;
 
@@ -83,6 +109,6 @@ function Home() {
       </div>
     </div>
   );
-}
+};
 
 export default Home;
