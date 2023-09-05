@@ -1,19 +1,17 @@
 import Link from "next/link";
 
+import useCurrentWorld from "@/app/hooks/useCurrentWorld";
 import { formatProfileCard } from "@/app/lib";
-import { DEFAULT_WORLD, QueryParams, User } from "@/app/types";
+import { User } from "@/app/types";
 
 import ProfileCard from "../ProfileCard";
-import { useQueryParams } from "@/app/hooks/useQueryParams";
 
 interface ProfileCardListProps {
   users: User[] | null;
 }
 
 const ProfileCardList: React.FC<ProfileCardListProps> = ({ users }) => {
-  const { queryParams } = useQueryParams<QueryParams>();
-  const { world } = queryParams;
-  const currentWorld = world ?? DEFAULT_WORLD;
+  const currentWorld = useCurrentWorld();
 
   if (!users) return null;
 

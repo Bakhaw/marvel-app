@@ -5,9 +5,10 @@ import Link from "next/link";
 import { Skeleton } from "antd";
 
 import { CharactersParams, useCharacters } from "@/app/hooks/useCharacters";
+import useCurrentWorld from "./hooks/useCurrentWorld";
 import { useQueryParams } from "@/app/hooks/useQueryParams";
 import { formatCharactersToUsers } from "@/app/lib";
-import { DEFAULT_WORLD, QueryParams, World } from "@/app/types";
+import { QueryParams, World } from "@/app/types";
 
 import Pagination from "@/app/components/Pagination";
 import ProfileCardList from "@/app/components/ProfileCardList";
@@ -15,8 +16,8 @@ import TotalResults from "@/app/components/TotalResults";
 
 const Home: React.FC = () => {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
-  const { page = 0, search, world } = queryParams;
-  const currentWorld = world ?? DEFAULT_WORLD;
+  const { page = 0, search } = queryParams;
+  const currentWorld = useCurrentWorld();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const fetchLimit = 20;
