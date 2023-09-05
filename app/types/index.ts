@@ -51,7 +51,6 @@ export interface Post {
 export interface QueryParams {
   page: number;
   search: string;
-  world: World;
 }
 
 export enum World {

@@ -30,7 +30,7 @@ const Home: React.FC<HomeProps> = ({ params: { world } }) => {
     limit: fetchLimit,
     offset: offset > 0 ? offset - fetchLimit : 0,
     search: search ? search : "",
-    world,
+    world: world ?? DEFAULT_WORLD,
     page,
   };
 
