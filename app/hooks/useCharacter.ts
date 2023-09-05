@@ -19,9 +19,11 @@ async function fetchCharacter(
   switch (world) {
     case World.marvel:
       character = {
-        data: response.data.data.results,
-        total: response.data.data.total,
+        data: response.data.data?.results,
+        total: response.data.data?.total,
       };
+
+      console.log("character", character);
       break;
 
     case World.harry_potter:
@@ -57,6 +59,7 @@ export function useCharacter(characterId: string, world: World) {
 
   async function getCharacter() {
     const character = await getMethod(characterId, world);
+
     setCharacter(character.data[0] ?? character.data);
   }
 

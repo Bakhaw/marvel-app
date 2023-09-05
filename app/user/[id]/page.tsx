@@ -13,16 +13,24 @@ import {
   isHarryPotterCharacter,
   isMarvelCharacter,
 } from "@/app/lib";
-import { Character, Post, User, WORLD, World } from "@/app/types";
+import { Character, Post, User, DEFAULT_WORLD, QueryParams } from "@/app/types";
+
+import { useQueryParams } from "@/app/hooks/useQueryParams";
 
 import ButtonBack from "@/app/components/ButtonBack";
 import PostCard from "@/app/components/PostCard";
 import ProfileCard from "@/app/components/ProfileCard";
 
 function Page() {
+  const { queryParams } = useQueryParams<QueryParams>();
+  const { world } = queryParams;
+  const currentWorld = world ?? DEFAULT_WORLD;
+
   const { id: userId } = useParams();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
+
+  console.log("id", userId);
 
   async function getPosts(user: User) {
     // const prompt = `Écris trois tweets comme si tu étais Vegeta (Dragon Ball).
@@ -61,7 +69,7 @@ function Page() {
     getPosts(user);
   }, [user?.id]);
 
-  const character = useCharacter(userId.toString(), WORLD);
+  const character = useCharacter(userId.toString(), currentWorld);
 
   function initUser(character: Character) {
     const isMarvel = isMarvelCharacter(character);

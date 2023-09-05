@@ -13,7 +13,7 @@ interface Body {
 }
 
 const urlObj = (characterId: string, params: string) => ({
-  [World.marvel]: `https://gateway.marvel.com:443/v1/public/characters${params}`,
+  [World.marvel]: `https://gateway.marvel.com:443/v1/public/characters/${characterId}${params}`,
   [World.harry_potter]: `https://hp-api.onrender.com/api/character/${characterId}${params}`,
   [World.naruto]: `https://narutodb.xyz/api/character/${characterId}${params}`,
 });

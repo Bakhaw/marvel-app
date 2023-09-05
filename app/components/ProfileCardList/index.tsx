@@ -1,15 +1,20 @@
 import Link from "next/link";
 
 import { formatProfileCard } from "@/app/lib";
-import { User } from "@/app/types";
+import { DEFAULT_WORLD, QueryParams, User } from "@/app/types";
 
 import ProfileCard from "../ProfileCard";
+import { useQueryParams } from "@/app/hooks/useQueryParams";
 
 interface ProfileCardListProps {
   users: User[] | null;
 }
 
 const ProfileCardList: React.FC<ProfileCardListProps> = ({ users }) => {
+  const { queryParams } = useQueryParams<QueryParams>();
+  const { world } = queryParams;
+  const currentWorld = world ?? DEFAULT_WORLD;
+
   if (!users) return null;
 
   if (!users?.length) {
@@ -21,7 +26,7 @@ const ProfileCardList: React.FC<ProfileCardListProps> = ({ users }) => {
   }
 
   return users.map((user, i) => (
-    <Link key={i} href={`/user/${user.id}`}>
+    <Link key={i} href={`/user/${user.id}/?world=${currentWorld}`}>
       <li>
         <ProfileCard {...formatProfileCard(user)} />
       </li>

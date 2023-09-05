@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useRef } from "react";
+import Link from "next/link";
 import { Skeleton } from "antd";
 
 import { CharactersParams, useCharacters } from "@/app/hooks/useCharacters";
@@ -11,17 +12,12 @@ import { DEFAULT_WORLD, QueryParams, World } from "@/app/types";
 import Pagination from "@/app/components/Pagination";
 import ProfileCardList from "@/app/components/ProfileCardList";
 import TotalResults from "@/app/components/TotalResults";
-import Link from "next/link";
 
-interface HomeProps {
-  params: {
-    world: World;
-  };
-}
-
-const Home: React.FC<HomeProps> = ({ params: { world } }) => {
+const Home: React.FC = () => {
   const { queryParams, setQueryParams } = useQueryParams<QueryParams>();
-  const { page = 0, search } = queryParams;
+  const { page = 0, search, world } = queryParams;
+  const currentWorld = world ?? DEFAULT_WORLD;
+
   const inputRef = useRef<HTMLInputElement>(null);
   const fetchLimit = 20;
   const offset = Number(page) * fetchLimit;
@@ -30,7 +26,7 @@ const Home: React.FC<HomeProps> = ({ params: { world } }) => {
     limit: fetchLimit,
     offset: offset > 0 ? offset - fetchLimit : 0,
     search: search ? search : "",
-    world: world ?? DEFAULT_WORLD,
+    world: currentWorld,
     page,
   };
 
@@ -45,10 +41,10 @@ const Home: React.FC<HomeProps> = ({ params: { world } }) => {
     });
   }
 
-  console.log("world", world);
+  console.log("world", currentWorld);
 
   const worlds = Object.values(World);
-  if (!worlds.includes(world))
+  if (!worlds.includes(currentWorld))
     return (
       <div className="h-screen flex flex-col justify-center items-center text-white">
         <h1>You passed a wrong parameter</h1>
@@ -57,7 +53,7 @@ const Home: React.FC<HomeProps> = ({ params: { world } }) => {
         <ul>
           {worlds.map((world) => (
             <li key={world}>
-              <Link href={`/${world}`}>{world}</Link>
+              <Link href={`/?world=${world}`}>{world}</Link>
             </li>
           ))}
         </ul>
